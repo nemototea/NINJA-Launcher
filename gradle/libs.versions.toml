@@ -36,6 +36,7 @@ accompanist-navigation-animation = { group = "com.google.accompanist", name = "a
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 play-services-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "playServicesAds" }
 billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
+desugar_jdk_libs = { group = "com.android.tools", name = "desugar_jdk_libs", version = "1.1.5" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

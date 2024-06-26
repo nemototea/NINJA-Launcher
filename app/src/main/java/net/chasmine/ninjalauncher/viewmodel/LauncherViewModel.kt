@@ -13,8 +13,8 @@ class LauncherViewModel : ViewModel() {
     private val _apps = MutableStateFlow<List<AppModel>>(emptyList())
     val apps: StateFlow<List<AppModel>> get() = _apps
 
-    private val _homeScreensModel = MutableStateFlow<List<HomeScreenModel>>(emptyList())
-    val homeScreensModel: StateFlow<List<HomeScreenModel>> get() = _homeScreensModel
+    private val _homeScreens = MutableStateFlow<List<HomeScreenModel>>(emptyList())
+    val homeScreens: StateFlow<List<HomeScreenModel>> get() = _homeScreens
 
     private val _isNinjaMode = MutableStateFlow(false)
     val isNinjaMode: StateFlow<Boolean> get() = _isNinjaMode
@@ -28,33 +28,40 @@ class LauncherViewModel : ViewModel() {
     }
 
     private fun loadApps() {
-        // ダミーデータをロード
         _apps.value = listOf(
             AppModel(id = "1", name = "App 1", packageName = "com.example.app1", icon = ""),
-            AppModel(id = "2", name = "App 2", packageName = "com.example.app2", icon = ""),
-            // さらにアプリを追加
+            AppModel(id = "2", name = "App 2", packageName = "com.example.app2", icon = "")
         )
     }
 
     private fun loadHomeScreens() {
-        // ダミーデータをロード
-        _homeScreensModel.value = listOf(
+        _homeScreens.value = listOf(
             HomeScreenModel(id = "1", name = "Home Screen 1"),
             HomeScreenModel(id = "2", name = "Home Screen 2")
-            // さらにホームスクリーンを追加
         )
     }
 
     fun groupApps(selectedApps: List<AppModel>) {
-        // グループ化のロジックを追加
         sendIntent(LauncherIntent.GroupApps(selectedApps.map { it.id }))
     }
 
     fun addHomeScreen(name: String) {
-        // 新しいホームスクリーンを追加
-        val newHomeScreenModel = HomeScreenModel(id = (_homeScreensModel.value.size + 1).toString(), name = name)
-        _homeScreensModel.value += newHomeScreenModel
+        val newHomeScreen = HomeScreenModel(id = (_homeScreens.value.size + 1).toString(), name = name)
+        _homeScreens.value = _homeScreens.value + newHomeScreen
         sendIntent(LauncherIntent.AddHomeScreen(name))
+    }
+
+    fun reorderHomeScreens(newOrder: List<HomeScreenModel>) {
+        _homeScreens.value = newOrder
+        sendIntent(LauncherIntent.ReorderHomeScreens(newOrder.map { it.id }))
+    }
+
+    fun renameHomeScreen(id: String, newName: String) {
+        val updatedHomeScreens = _homeScreens.value.map {
+            if (it.id == id) it.copy(name = newName) else it
+        }
+        _homeScreens.value = updatedHomeScreens
+        sendIntent(LauncherIntent.RenameHomeScreen(id, newName))
     }
 
     fun enterNinjaMode() {
@@ -73,3 +80,4 @@ class LauncherViewModel : ViewModel() {
         }
     }
 }
+
